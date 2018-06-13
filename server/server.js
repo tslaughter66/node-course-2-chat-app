@@ -18,16 +18,15 @@ app.use(express.static(publicPath));    // static middleware
 io.on('connection', (socket) => {
   console.log('New user connected.');
 
-  // socket.emit sends an event to the client.
-  // emit a newMessage to the client.
-  socket.emit('newMessage', {
-    from: 'Tim',
-    text: 'New Message sent from server to client.',
-    createdAt: 123
-  });
-
   socket.on('createMessage', (message) => {
-    console.log('Message received on server from client.', message)
+    //console.log('Message received on server from client.', message)
+
+    // io.emit sends an event to ALL sockets.
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
