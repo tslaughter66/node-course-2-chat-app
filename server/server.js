@@ -25,10 +25,12 @@ io.on('connection', (socket) => {
   // Broadcast a 'New user joined.' message to all other users.
   socket.broadcast.emit('newMessage', generateMessage('Admin','New user joined.'));
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
+    console.log('createMessage', message);
     // io.emit sends an event to ALL sockets.
     // Server received a message from the client -> broadcast it to all users.
     io.emit('newMessage', generateMessage(message.from,message.text));
+    callback('This is from the server.');
   });
 
   socket.on('disconnect', () => {
