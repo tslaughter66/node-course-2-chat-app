@@ -29,7 +29,7 @@ socket.on('newLocationMessage', function (message) {
   // anchor tag is used to insert hyperlinks. target="_blank" tells the browser to open in a new tab.
   var a = jQuery('<a target="_blank">My current location.</a>');
 
-  li.text=(`${message.from}: `);
+  li.text(`${message.from}: `);
   // attr lets you add an attribute, in this case: the hyperlink
   a.attr('href', message.url);
   li.append(a);
