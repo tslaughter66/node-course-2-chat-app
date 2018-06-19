@@ -12,33 +12,33 @@ socket.on('disconnect', function () {
 
 // Listen for a new message.
 socket.on('newMessage', function (message) {
-  // format the createdAt time using createdAt
-  var formattedTime = moment(message.createdAt).format('h:mm a');
+  var formattedTime = moment(message.createdAt).format('h:mm a'); // format the createdAt time using moment.js
+  // get the message template script using jQuery. Template is stored on index.html.
+  var template = jQuery('#message-template').html();  //jQuery.html() gets the html values from the template.
+  // use Mustache library to render the html. inject dynamic data into the template by passing an object to mustache.
+  var html = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    createdAt: formattedTime
+  });
 
-  // When the new message is received on client, create a new list HTML item using jQuery.
-  var li = jQuery('<li></li>');
-  li.text(`${message.from} ${formattedTime}: ${message.text}`);
-
-  // Use jQuery to append the list HTML item containing the message information to the UI.
-  jQuery('#messages').append(li);
+  jQuery('#messages').append(html);   // use jQuery to insert the mustache html into the page.
 });
 
 // Listen for a new location message.
 socket.on('newLocationMessage', function (message) {
   // format the createdAt time using createdAt
   var formattedTime = moment(message.createdAt).format('h:mm a');
+  // get the message template script using jQuery. Template is stored on index.html.
+  var template = jQuery('#location-message-template').html();  //jQuery.html() gets the html values from the template.
+  // use Mustache library to render the html. inject dynamic data into the template by passing an object to mustache.
+  var html = Mustache.render(template, {
+    url: message.url,
+    from: message.from,
+    createdAt: formattedTime
+  });
 
-  // When the new location message is received on client, create a new list HTML item using jQuery.
-  var li = jQuery('<li></li>');
-  // anchor tag is used to insert hyperlinks. target="_blank" tells the browser to open in a new tab.
-  var a = jQuery('<a target="_blank">My current location.</a>');
-
-  li.text(`${message.from} ${formattedTime}: `);
-  // attr lets you add an attribute, in this case: the hyperlink
-  a.attr('href', message.url);
-  li.append(a);
-  // Use jQuery to append the list HTML item containing the message information to the UI.
-  jQuery('#messages').append(li);
+  jQuery('#messages').append(html);   // use jQuery to insert the mustache html into the page.
 });
 
 // jQuery lets you add a socket to a UI field.
