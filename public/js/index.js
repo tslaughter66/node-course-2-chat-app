@@ -12,11 +12,12 @@ socket.on('disconnect', function () {
 
 // Listen for a new message.
 socket.on('newMessage', function (message) {
-  console.log('New message from server.', message);
+  // format the createdAt time using createdAt
+  var formattedTime = moment(message.createdAt).format('h:mm a');
 
   // When the new message is received on client, create a new list HTML item using jQuery.
   var li = jQuery('<li></li>');
-  li.text(`${message.from}: ${message.text}`);
+  li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
   // Use jQuery to append the list HTML item containing the message information to the UI.
   jQuery('#messages').append(li);
@@ -24,12 +25,15 @@ socket.on('newMessage', function (message) {
 
 // Listen for a new location message.
 socket.on('newLocationMessage', function (message) {
+  // format the createdAt time using createdAt
+  var formattedTime = moment(message.createdAt).format('h:mm a');
+
   // When the new location message is received on client, create a new list HTML item using jQuery.
   var li = jQuery('<li></li>');
   // anchor tag is used to insert hyperlinks. target="_blank" tells the browser to open in a new tab.
   var a = jQuery('<a target="_blank">My current location.</a>');
 
-  li.text(`${message.from}: `);
+  li.text(`${message.from} ${formattedTime}: `);
   // attr lets you add an attribute, in this case: the hyperlink
   a.attr('href', message.url);
   li.append(a);
