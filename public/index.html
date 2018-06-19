@@ -4,20 +4,31 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/styles.css">  <!-- Load in the css file. -->
 </head>
 
-<body>
-  <p>Welcome to the chat app.</p>
+<body class="chat">
 
-  <!-- ordered list that will be populated with message data using jQuery. -->
-  <ol id="messages"></ol>
+  <div class="chat__sidebar">
+    <h3>People</h3>
+    <div id="users"></div>
+  </div>
 
-  <!-- form to submit messages. -->
-  <form id="message-form">
-    <input name="message" type="text", placeholder="Message"/>
-    <button>Send</button>
-  </form>
-  <button id="send-location">Send Location</button>
+  <div class="chat__main">
+    <!-- ordered list that will be populated with message data using jQuery. -->
+    <ol id="messages" class="chat__messages"></ol>
+
+    <div class="chat__footer">
+        <!-- form to submit messages. -->
+        <form id="message-form">
+          <!-- autofocus focuses on this element when html loads. autocomplete turns off autocomplete.-->
+          <input name="message" type="text", placeholder="Message" autofocus autocomplete="off"/>
+          <button>Send</button>
+        </form>
+        <button id="send-location">Send location</button>
+    </div>
+
+  </div>
 
   <script src="/socket.io/socket.io.js"></script><!-- Loads socket.io library from a local path. Library automatically added to server by socket.io -->
   <script src="/js/libs/jquery-3.3.1.min.js"></script>

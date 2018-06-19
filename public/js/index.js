@@ -42,12 +42,16 @@ socket.on('newLocationMessage', function (message) {
 jQuery('#message-form').on('submit', function (e) {
   e.preventDefault();   // prevents default action from occurring. In this case, a submit would submit the form to the server.
 
+  // store the message text box as a jquert variable.
+  var messageTextbox = jQuery('[name=message]');
+
   // emit createMessage event once user submits.
   socket.emit('createMessage', {
     from: 'User',
-    text: jQuery('[name=message]').val()
+    text: messageTextbox.val()
   }, function() {
-
+    // acknowledement callback is run by the server after the listener completes.
+    messageTextbox.val('')
   });
 });
 
@@ -61,8 +65,13 @@ locationButton.on('click', function (e) {
     return alert('Geolocation not supported by your browser.');
   }
 
+  // disable the button while request is submitting.
+  locationButton.attr('disabled', 'disabled').text('Sending location...');
+
   // getCurrentPostion uses geolocation to get location. Method takes two methods as parameters, success function and failure function.
   navigator.geolocation.getCurrentPosition(function (position) {
+    locationButton.removeAttr('disabled').text('Send location'); // re-enable the button when the request finishes.
+
     // Emit an event to create location message.
     socket.emit('createLocationMessage', {
       // pass latitude and longitude to event listener. Found on position object returned from geolocation.
@@ -70,6 +79,8 @@ locationButton.on('click', function (e) {
       longitude: position.coords.longitude
     });
   }, function () {
+    locationButton.removeAttr('disabled').text('Send location');  // re-enable the button when the request finishes.
+    // Call failed, alert the user.
     alert('Unable to share location.');
   });
 });
