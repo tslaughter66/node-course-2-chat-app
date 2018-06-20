@@ -1,5 +1,23 @@
 var socket = io(); <!-- makes a request to the server to open a web socket -->
 
+// autoscroll to the bottom of the page.
+function scrollToBottom () {
+  // Selectors
+  var messages = jQuery('#messages');     // Get all messages.
+  var newMessage = messages.children('li:last-child');    // get the last message (just printed to screen.)
+  // Heights
+  var clientHeight = messages.prop('clientHeight');       // Height of current viewing section
+  var scrollTop = messages.prop('scrollTop');             // Height above the current viewing section
+  var scrollHeight = messages.prop('scrollHeight');       // Total Height
+  var newMessageHeight = newMessage.innerHeight();        // Height of newest message
+  var lastMessageHeight = newMessage.prev().innerHeight();  // Height of previous message.
+
+  if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    // If the total of all heights is >= the total height of chat, scroll to bottom.
+    messages.scrollTop(scrollHeight);
+  }
+}
+
 <!-- socket listener for successful connect to server. -->
 socket.on('connect', function () {
   console.log('Connected to server.');
@@ -23,6 +41,7 @@ socket.on('newMessage', function (message) {
   });
 
   jQuery('#messages').append(html);   // use jQuery to insert the mustache html into the page.
+  scrollToBottom();                   // Autoscrolling to bottom of page.
 });
 
 // Listen for a new location message.
@@ -39,6 +58,7 @@ socket.on('newLocationMessage', function (message) {
   });
 
   jQuery('#messages').append(html);   // use jQuery to insert the mustache html into the page.
+  scrollToBottom();                   // Autoscrolling to bottom of page.
 });
 
 // jQuery lets you add a socket to a UI field.
