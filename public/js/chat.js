@@ -20,12 +20,38 @@ function scrollToBottom () {
 
 <!-- socket listener for successful connect to server. -->
 socket.on('connect', function () {
-  console.log('Connected to server.');
+  // get user and room name params from the url using deparam method.
+  var params = jQuery.deparam(window.location.search);  // location.search is a built in container on all browser. Acces using window.
+
+  socket.emit('join', params, function(err) {
+    // acknowledement function.
+    if(err) {
+      alert(err);   // alert the user of error.
+      // If there is an error, redirect the user back to index page.
+      window.location.href = '/';     // href lets you determine which page the user is on.
+    } else {
+      console.log('no error');
+    }
+  });
 });
 
 <!-- socket listener for disconnect from server. -->
 socket.on('disconnect', function () {
   console.log('Disconnected from server.');
+});
+
+// Listener for updated user list from server.
+socket.on('updateUserList', function (users) {
+  // create a jQuery list object
+  var ol = jQuery('<ol></ol>');
+
+  // loop through users. For each one, append a new list item with the user name to the list object.
+  users.forEach(function(user) {
+    ol.append(jQuery('<li></li>').text(user));
+  });
+
+  // add the list to the html. Using html replaces existing data (as compared to append which just adds new data on.)
+  jQuery('#users').html(ol);
 });
 
 // Listen for a new message.
