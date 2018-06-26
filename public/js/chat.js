@@ -97,7 +97,6 @@ jQuery('#message-form').on('submit', function (e) {
 
   // emit createMessage event once user submits.
   socket.emit('createMessage', {
-    from: 'User',
     text: messageTextbox.val()
   }, function() {
     // acknowledement callback is run by the server after the listener completes.
